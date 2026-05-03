@@ -1,0 +1,131 @@
+ion-header {
+  ion-toolbar {
+    --background: #ffffff;
+    padding-top: 8px;
+  }
+  ion-title {
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: #1f2937;
+  }
+  .close-btn {
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+}
+
+ion-content {
+  --background: #ffffff;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 16px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.custom-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #374151;
+  margin-left: 4px;
+}
+
+.custom-input {
+  --background: #f9fafb;
+  --border-radius: 14px;
+  --padding-start: 16px;
+  border: 1.5px solid #e5e7eb;
+  transition: all 0.2s ease;
+  
+  &:focus-within {
+    border-color: var(--ion-color-primary);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(var(--ion-color-primary-rgb), 0.1);
+  }
+  
+  ion-input {
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    --color: #000000;
+    color: #000000;
+  }
+}
+
+.color-selector {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 8px 4px;
+  
+  .color-option {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: 3px solid transparent;
+    
+    &:active {
+      transform: scale(0.9);
+    }
+    
+    &.selected {
+      transform: scale(1.1);
+      border-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 0 2px #d1d5db, 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    ion-icon {
+      color: white;
+      font-size: 24px;
+    }
+  }
+}
+
+ion-footer {
+  background: white;
+  padding: 16px 24px 32px 24px;
+  
+  ion-toolbar {
+    --background: transparent;
+  }
+  
+  .save-button {
+    margin: 0;
+    --box-shadow: 0 8px 20px rgba(var(--ion-color-primary-rgb), 0.35);
+    height: 56px;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+  }
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+ion-content {
+  flex: 1 1 auto;
+  min-height: 0; /* important for flexbox scrolling */
+}
+
+ion-header, ion-footer {
+  flex: 0 0 auto;
+}

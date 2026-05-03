@@ -1,0 +1,32 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{ categoryData ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="medium" class="close-btn" (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="modal-form">
+    <form [formGroup]="this.categoryForm">
+      <div class="input-group">
+        <ion-label position="stacked" class="custom-label">Nombre de categoría</ion-label>
+        <ion-item class="custom-input" lines="none">
+          <ion-input placeholder="Ej. Finanzas" type="text" formControlName="name"></ion-input>
+        </ion-item>
+      </div>     
+    </form>
+  </div>
+  <ion-footer class="ion-no-border" >
+    <ion-toolbar style="padding-bottom: 10px;">
+      <ion-button expand="block" class="save-button" shape="round" (click)="saveCategory()">
+        {{ categoryData ? 'Actualizar Categoría' : 'Guardar Categoría' }}
+      </ion-button>
+      <ion-button *ngIf="categoryData" expand="block" color="danger" fill="clear" shape="round" style="margin-top: 5px; font-weight: 600;" (click)="deleteCategory()">
+        Eliminar Categoría
+      </ion-button>
+    </ion-toolbar>
+  </ion-footer>
+</ion-content>

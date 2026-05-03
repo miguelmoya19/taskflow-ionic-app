@@ -1,0 +1,33 @@
+<div class="task-list-filter-container">
+  <button class="filter-chip" [class.active]="selectedCategoryId === null" (click)="selectCategory(null)">Todas</button>
+  <button class="filter-chip" *ngFor="let category of categories" [class.active]="selectedCategoryId === category.id" (click)="selectCategory(category.id)">
+    {{ category.name }}
+  </button>
+</div>
+
+<div class="task-list-container">
+  <ion-card class="task-item-card" *ngFor="let item of filteredTasks" (click)="editTask(item)">
+    <div class="task-item-content">
+      <div class="task-details">
+        <div class="box-status">
+          <h4 class="task-title">{{ item.title }}</h4>
+          <ion-badge [color]="!item.completed ? 'warning' : 'success'" mode="ios">
+            {{ !item.completed ? 'Pendiente' : 'Completada' }}
+          </ion-badge>
+        </div>
+        <div class="task-meta">
+          <ion-badge color="tertiary" mode="ios">{{ mapCategoryName(item.categoryId) }}</ion-badge>
+          <span class="task-time">
+            <ion-icon name="calendar-outline" color="medium"></ion-icon> {{ item.dateTime.split('T')[0] }}
+          </span>
+        </div>
+      </div>
+
+      <div class="task-actions" (click)="deleteTaskList(item.id); $event.stopPropagation()">
+        <ion-button fill="clear" color="medium" size="small" class="delete-btn">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </ion-card>
+</div>

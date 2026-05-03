@@ -1,0 +1,19 @@
+<div class="category-scroll-container">
+  <div class="category-chip add-new" (click)="openCategoryModal()">
+    <div class="category-icon new">
+      <ion-icon name="add"></ion-icon>
+    </div>
+    <span class="category-name">Nueva</span>
+  </div>
+  
+  @for (item of this.categories; track $index) {
+    <div class="category-chip" (click)="openCategoryModal(item)">
+      <div class="category-icon">
+        <ion-icon name="pricetag"></ion-icon>
+      </div>
+      <span class="category-name">{{item.name}}</span>
+    </div>
+  }
+
+
+</div>
