@@ -1,50 +1,73 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Storage } from '@ionic/storage-angular';
 import { TaskModel } from 'src/app/models/task/taskModel';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
+  private storageKey = 'tasks';
+  private tasks: TaskModel[] = [];
+  private tasksChanged = new Subject<void>();
+  public tasksChanged$ = this.tasksChanged.asObservable();
+  private ready: Promise<void>;
 
-   private storageKey = 'tasks';
-   private tasksChanged = new Subject<void>();
-   public tasksChanged$ = this.tasksChanged.asObservable();
-
-  getTasks(): TaskModel[] {
-    return JSON.parse(localStorage.getItem(this.storageKey) || '[]') as TaskModel[];
+  constructor(@Inject(Storage) private storage: Storage) {
+    this.ready = this.init();
   }
 
-  saveTasks(tasks: TaskModel[]) {
-    localStorage.setItem(this.storageKey, JSON.stringify(tasks));
+  private async init(): Promise<void> {
+    await this.storage.create();
+    const stored = await this.storage.get(this.storageKey);
+    this.tasks = Array.isArray(stored) ? stored : [];
   }
 
-  addTask(task: TaskModel) {
-    const tasks = this.getTasks();
-    tasks.push(task);
-    this.saveTasks(tasks);
+  private async ensureReady(): Promise<void> {
+    await this.ready;
+  }
+
+  public async getTasks(): Promise<TaskModel[]> {
+    await this.ensureReady();
+    return [...this.tasks];
+  }
+
+  public async saveTasks(tasks: TaskModel[]): Promise<void> {
+    await this.ensureReady();
+    this.tasks = [...tasks];
+    await this.storage.set(this.storageKey, this.tasks);
+  }
+
+  public async addTask(task: TaskModel): Promise<void> {
+    await this.ensureReady();
+    const tasks = [...this.tasks, task];
+    await this.saveTasks(tasks);
     this.tasksChanged.next();
   }
 
-  deleteTask(id: number) {
-    const tasks = this.getTasks().filter(t => t.id !== id);
-    this.saveTasks(tasks);
+  public async deleteTask(id: number): Promise<void> {
+    await this.ensureReady();
+    const tasks = this.tasks.filter(t => t.id !== id);
+    await this.saveTasks(tasks);
     this.tasksChanged.next();
   }
 
-  updateTask(task: TaskModel) {
-    const tasks = this.getTasks().map(t => t.id === task.id ? task : t);
-    this.saveTasks(tasks);
+  public async updateTask(task: TaskModel): Promise<void> {
+    await this.ensureReady();
+    const tasks = this.tasks.map(t => t.id === task.id ? task : t);
+    await this.saveTasks(tasks);
     this.tasksChanged.next();
   }
 
-  toggleTask(id: number) {
-    const tasks = this.getTasks().map(t => {
-      if (t.id === id) t.completed = !t.completed;
+  public async toggleTask(id: number): Promise<void> {
+    await this.ensureReady();
+    const tasks = this.tasks.map(t => {
+      if (t.id === id) {
+        return { ...t, completed: !t.completed };
+      }
       return t;
     });
-    this.saveTasks(tasks);
+    await this.saveTasks(tasks);
     this.tasksChanged.next();
   }
-  
 }

@@ -20,39 +20,35 @@ export class DashboardPage implements OnInit, OnDestroy {
   @ViewChild(TaskListComponent) taskList!: TaskListComponent;
   private tasksSub = new Subscription();
 
-    public dashTotal: DashTotal = {
+  public dashTotal: DashTotal = {
     total: 0,
     pending: 0,
     completed: 0
-  }
+  };
 
-  constructor(private readonly taskService: TaskService){}
+  constructor(private readonly taskService: TaskService) {}
 
-  ngOnInit(): void {
-    this.taskCounters();
-    this.tasksSub = this.taskService.tasksChanged$.subscribe(() => {
-      this.taskCounters();
-      this.taskList?.getTaskList();
+  async ngOnInit(): Promise<void> {
+    await this.taskCounters();
+    this.tasksSub = this.taskService.tasksChanged$.subscribe(async () => {
+      await this.taskCounters();
+      await this.taskList?.getTaskList();
     });
   }
 
-
- public onModalDismiss(event: any) {
+  public async onModalDismiss(event: any): Promise<void> {
     if (event.detail.data?.taskAdded || event.detail.data?.taskUpdated) {
-      this.taskList.getTaskList();
-      this.taskCounters();
+      await this.taskList.getTaskList();
+      await this.taskCounters();
     }
   }
 
-
-  public taskCounters(): void {
-
-    const tasks = this.taskService.getTasks();
+  public async taskCounters(): Promise<void> {
+    const tasks = await this.taskService.getTasks();
 
     this.dashTotal.total = tasks.length;
     this.dashTotal.pending = tasks.filter(p => !p.completed).length;
     this.dashTotal.completed = tasks.filter(c => c.completed).length;
-
   }
 
   ngOnDestroy(): void {

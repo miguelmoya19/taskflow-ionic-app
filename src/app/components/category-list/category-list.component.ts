@@ -13,13 +13,13 @@ import { apps, pricetag, add } from 'ionicons/icons';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, CategoryModalComponent]
+  imports: [CommonModule, IonicModule]
 })
 export class CategoryListComponent implements OnInit {
 
-  public categories: categoryModel[]=[];
+  public categories: categoryModel[] = [];
 
-  constructor( private categoryService: CategoryService, private modalCtrl: ModalController ){
+  constructor(private categoryService: CategoryService, private modalCtrl: ModalController) {
     addIcons({ apps, pricetag, add });
   }
 
@@ -31,20 +31,19 @@ export class CategoryListComponent implements OnInit {
       breakpoints: [0, 0.65, 0.9],
       cssClass: 'custom-bottom-sheet'
     });
-    
-    modal.onDidDismiss().then(() => {
-      this.getCategoryList();
+
+    modal.onDidDismiss().then(async () => {
+      await this.getCategoryList();
     });
 
     return await modal.present();
   }
 
+  async ngOnInit(): Promise<void> {
+    await this.getCategoryList();
+  }
 
-  ngOnInit(): void {
-    this.getCategoryList()
-   }
-  
-      public getCategoryList(): void {
-    this.categories = this.categoryService.getCategories();
+  public async getCategoryList(): Promise<void> {
+    this.categories = await this.categoryService.getCategories();
   }
 }

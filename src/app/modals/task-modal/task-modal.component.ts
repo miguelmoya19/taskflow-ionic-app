@@ -16,50 +16,45 @@ import { CategoryService } from 'src/app/services/category/category-service';
 })
 export class TaskModalComponent implements OnInit {
 
- @Input() task?: TaskModel;
- @Input() isEdit = false;
+  @Input() task?: TaskModel;
+  @Input() isEdit = false;
 
- public taskForm!: FormGroup;
- private localDate = new Date().toISOString()
+  public taskForm!: FormGroup;
+  private localDate = new Date().toISOString();
 
- public tasks: TaskModel[]=[]
+  public tasks: TaskModel[] = [];
+  public categories: categoryModel[] = [];
 
-  public categories: categoryModel[]=[];
-
- get getterForm(): FormGroup{
+  get getterForm(): FormGroup {
     return this.taskForm;
- }
- 
- get getterId(): number {
+  }
 
-   this.tasks = this.taskService.getTasks();
-
+  get getterId(): number {
     const id = this.tasks.length
-    ? Math.max(...this.tasks.map(t => t.id)) + 1
-    : 1;
+      ? Math.max(...this.tasks.map(t => t.id)) + 1
+      : 1;
 
-  return id;
- }
-
+    return id;
+  }
 
   constructor(
-    private readonly modalCtrl: ModalController, 
-    private readonly formBuilder: FormBuilder, 
+    private readonly modalCtrl: ModalController,
+    private readonly formBuilder: FormBuilder,
     private readonly taskService: TaskService,
     private readonly categoryService: CategoryService,
-   ) {
+  ) {
     this.taskForm = this.formBuilder.group({
       title: ['', Validators.required],
       completed: [false],
       categoryId: [null],
       dateTime: [this.localDate]
     });
-
   }
 
+  async ngOnInit(): Promise<void> {
+    await this.loadTasks();
+    await this.loadCategories();
 
-  ngOnInit(): void {
-    this.getCategoryList();
     if (this.task) {
       this.taskForm.patchValue({
         title: this.task.title,
@@ -74,12 +69,10 @@ export class TaskModalComponent implements OnInit {
     this.modalCtrl.dismiss();
   }
 
-  public saveTask(): void {
-
-    const {title, completed, categoryId, dateTime} = this.getterForm.controls;
+  public async saveTask(): Promise<void> {
+    const { title, completed, categoryId, dateTime } = this.getterForm.controls;
 
     if (this.taskForm.valid) {
-      
       const task: TaskModel = {
         id: this.task?.id ?? this.getterId,
         title: title.value,
@@ -89,16 +82,20 @@ export class TaskModalComponent implements OnInit {
       };
 
       if (this.isEdit && this.task) {
-        this.taskService.updateTask(task);
+        await this.taskService.updateTask(task);
         this.modalCtrl.dismiss({ taskUpdated: true });
       } else {
-        this.taskService.addTask(task);
+        await this.taskService.addTask(task);
         this.modalCtrl.dismiss({ taskAdded: true });
       }
     }
   }
 
-  public getCategoryList(): void {
-    this.categories = this.categoryService.getCategories();
+  private async loadTasks(): Promise<void> {
+    this.tasks = await this.taskService.getTasks();
+  }
+
+  private async loadCategories(): Promise<void> {
+    this.categories = await this.categoryService.getCategories();
   }
 }

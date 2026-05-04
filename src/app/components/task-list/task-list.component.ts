@@ -16,29 +16,29 @@ import { TaskModalComponent } from 'src/app/modals/task-modal/task-modal.compone
 })
 export class TaskListComponent implements OnInit {
 
-   public tasks: TaskModel[] = [];
-   public filteredTasks: TaskModel[] = [];
-   public categories: categoryModel[] = [];
-   public selectedCategoryId: number | null = null;
+  public tasks: TaskModel[] = [];
+  public filteredTasks: TaskModel[] = [];
+  public categories: categoryModel[] = [];
+  public selectedCategoryId: number | null = null;
 
-   constructor( 
-    private taskService: TaskService, 
+  constructor(
+    private taskService: TaskService,
     private readonly categoryServive: CategoryService,
     private readonly modalCtrl: ModalController
-  ){}
+  ) {}
 
-  ngOnInit(): void {
-    this.getCategoryList();
-    this.getTaskList();
+  async ngOnInit(): Promise<void> {
+    await this.getCategoryList();
+    await this.getTaskList();
   }
 
-    public getTaskList(): void {
-    this.tasks = this.taskService.getTasks();
+  public async getTaskList(): Promise<void> {
+    this.tasks = await this.taskService.getTasks();
     this.filterTasks();
   }
 
-  private getCategoryList(): void {
-    this.categories = this.categoryServive.getCategories();
+  private async getCategoryList(): Promise<void> {
+    this.categories = await this.categoryServive.getCategories();
   }
 
   public async editTask(task: TaskModel): Promise<void> {
@@ -53,18 +53,18 @@ export class TaskListComponent implements OnInit {
       cssClass: 'custom-bottom-sheet'
     });
 
-    modal.onDidDismiss().then((event) => {
+    modal.onDidDismiss().then(async (event) => {
       if (event.data?.taskUpdated) {
-        this.getTaskList();
+        await this.getTaskList();
       }
     });
 
     await modal.present();
   }
 
-  public deleteTaskList(id:number): void {
-    this.taskService.deleteTask(id);
-    this.getTaskList();
+  public async deleteTaskList(id: number): Promise<void> {
+    await this.taskService.deleteTask(id);
+    await this.getTaskList();
   }
 
   public selectCategory(id: number | null): void {
@@ -79,10 +79,7 @@ export class TaskListComponent implements OnInit {
   }
 
   public mapCategoryName(id: number): string {
-
-   const categoryName = this.categoryServive.getCategories().find(c => c.id === id)?.name ?? "No se encontró la categoría";
-
-    return categoryName;
+    return this.categories.find(c => c.id === id)?.name ?? 'No se encontró la categoría';
   }
 
 }

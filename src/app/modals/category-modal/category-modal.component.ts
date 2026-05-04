@@ -17,36 +17,35 @@ export class CategoryModalComponent implements OnInit {
 
   @Input() categoryData?: categoryModel;
 
-  public category: {id: number, name:string}[]=[]
+  public category: { id: number; name: string }[] = [];
 
-  get getterForm(): FormGroup{
+  get getterForm(): FormGroup {
     return this.categoryForm;
- }
- 
- get getterId(): number {
+  }
 
-   this.category = this.categoryService.getCategories();
-
+  get getterId(): number {
     const id = this.category.length
-    ? Math.max(...this.category.map(t => t.id)) + 1
-    : 1;
+      ? Math.max(...this.category.map(t => t.id)) + 1
+      : 1;
 
-  return id;
- }
+    return id;
+  }
 
- public categoryForm!: FormGroup;
- 
+  public categoryForm!: FormGroup;
+
   constructor(
-    private readonly modalCtrl: ModalController, 
-    private readonly formBuilder: FormBuilder, 
+    private readonly modalCtrl: ModalController,
+    private readonly formBuilder: FormBuilder,
     private readonly categoryService: CategoryService) {
-      this.categoryForm = this.formBuilder.group({
-        id:[null],
-        name:['', Validators.required]
-      })
-    }
+    this.categoryForm = this.formBuilder.group({
+      id: [null],
+      name: ['', Validators.required]
+    });
+  }
 
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
+    await this.loadCategories();
+
     if (this.categoryData) {
       this.categoryForm.patchValue({
         id: this.categoryData.id,
@@ -59,60 +58,59 @@ export class CategoryModalComponent implements OnInit {
     this.modalCtrl.dismiss();
   }
 
-  public saveCategory(): void {
+  public async saveCategory(): Promise<void> {
+    const { name } = this.getterForm.controls;
+    await this.loadCategories();
 
-     const {name} = this.getterForm.controls;
+    const duplicateCategory = this.category.some(c =>
+      c.name.trim().toLowerCase() === name.value.trim().toLowerCase()
+    );
 
-     const duplicateCategory = this.categoryService.getCategories().some(c =>
-  c.name.trim().toLowerCase() === name.value.trim().toLowerCase()
-);
-     
+    if (!duplicateCategory) {
+      if (this.categoryForm.valid) {
+        if (this.categoryData) {
+          const category: categoryModel = {
+            id: this.categoryData.id,
+            name: name.value
+          };
+          await this.categoryService.updateCategory(category);
+          this.modalCtrl.dismiss({ categoryUpdated: true });
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'La categoría fue actualizada con éxito',
+            toast: true,
+            timer: 2500,
+            showConfirmButton: false
+          });
+        } else {
+          const category: categoryModel = {
+            id: this.getterId,
+            name: name.value
+          };
 
-     if(!duplicateCategory){
-        if (this.categoryForm.valid) {
-          if (this.categoryData) {
-            const category: categoryModel = {
-              id: this.categoryData.id,
-              name: name.value
-            };
-            this.categoryService.updateCategory(category);
-            this.modalCtrl.dismiss({ categoryUpdated: true });
-            Swal.fire({
-              icon: 'success',
-              title: 'Éxito',
-              text: 'La categoría fue actualizada con éxito',
-              toast: true,
-              timer: 2500,
-              showConfirmButton:false
-            });
-          } else {
-            const category: categoryModel = {
-              id: this.getterId,
-              name: name.value
-            };
-      
-            this.categoryService.addCategory(category);
-            this.modalCtrl.dismiss({ categoryAdded: true });
-            Swal.fire({
-              icon: 'success',
-              title: 'Éxito',
-              text: 'La categoría fue guardada con éxito',
-              toast: true,
-              timer: 2500,
-              showConfirmButton:false
-            });
-          }
-        }else {
-            Swal.fire({
-              icon: 'warning',
-              title: 'Campo requerido',
-              text: 'El nombre de la categoria es obligatorio',
-              toast: true,
-              timer: 2500,
-               showConfirmButton:false
-            });
+          await this.categoryService.addCategory(category);
+          this.modalCtrl.dismiss({ categoryAdded: true });
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'La categoría fue guardada con éxito',
+            toast: true,
+            timer: 2500,
+            showConfirmButton: false
+          });
         }
-     }else{
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo requerido',
+          text: 'El nombre de la categoria es obligatorio',
+          toast: true,
+          timer: 2500,
+          showConfirmButton: false
+        });
+      }
+    } else {
       Swal.fire({
         icon: 'warning',
         title: 'Categoría ya existe',
@@ -121,14 +119,12 @@ export class CategoryModalComponent implements OnInit {
         timer: 2500,
         showConfirmButton: false,
       });
-     }
-    
-
+    }
   }
 
-  public deleteCategory(): void {
+  public async deleteCategory(): Promise<void> {
     if (this.categoryData) {
-      this.categoryService.deleteCategory(this.categoryData.id);
+      await this.categoryService.deleteCategory(this.categoryData.id);
       this.modalCtrl.dismiss({ categoryDeleted: true });
       Swal.fire({
         icon: 'success',
@@ -136,8 +132,12 @@ export class CategoryModalComponent implements OnInit {
         text: 'La categoría fue eliminada',
         toast: true,
         timer: 2500,
-        showConfirmButton:false
+        showConfirmButton: false
       });
     }
+  }
+
+  private async loadCategories(): Promise<void> {
+    this.category = await this.categoryService.getCategories();
   }
 }
