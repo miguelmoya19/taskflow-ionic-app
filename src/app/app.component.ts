@@ -5,7 +5,8 @@ import {
   checkmarkDoneCircle, searchOutline, notificationsOutline, 
   listOutline, timeOutline, checkmarkCircleOutline, add,
   apps, briefcase, person, fitness, trashOutline, 
-  closeCircle, folderOutline, checkmark 
+  closeCircle, folderOutline, checkmark, calendarOutline,
+  documentOutline, pricetag
 } from 'ionicons/icons';
 
 @Component({
@@ -31,7 +32,9 @@ export class AppComponent {
       'close-circle': closeCircle,
       'folder-outline': folderOutline,
       'checkmark': checkmark,
-        'document': document
+      'calendar-outline': calendarOutline,
+      'document-outline': documentOutline,
+      'pricetag': pricetag,
     });
   }
 }

@@ -1,7 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ModalController } from '@ionic/angular';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
+import {
+  IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon,
+  IonContent, IonLabel, IonItem, IonInput, IonFooter,
+  ModalController
+} from '@ionic/angular/standalone';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoryService } from 'src/app/services/category/category-service';
 import { categoryModel } from 'src/app/models/category/categoryModel';
 import Swal from 'sweetalert2';
@@ -11,7 +15,11 @@ import Swal from 'sweetalert2';
   templateUrl: './category-modal.component.html',
   styleUrls: ['./category-modal.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, ɵInternalFormsSharedModule, ReactiveFormsModule]
+  imports: [
+    CommonModule, ReactiveFormsModule,
+    IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon,
+    IonContent, IonLabel, IonItem, IonInput, IonFooter
+  ]
 })
 export class CategoryModalComponent implements OnInit {
 

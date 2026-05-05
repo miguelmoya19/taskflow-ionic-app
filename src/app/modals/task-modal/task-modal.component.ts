@@ -1,6 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ModalController } from '@ionic/angular';
+import {
+  IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon,
+  IonContent, IonLabel, IonItem, IonInput, IonSelect, IonSelectOption,
+  IonToggle, IonFooter,
+  ModalController
+} from '@ionic/angular/standalone';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TaskModel } from 'src/app/models/task/taskModel';
 import { TaskService } from 'src/app/services/task/task-service';
@@ -12,7 +17,12 @@ import { CategoryService } from 'src/app/services/category/category-service';
   templateUrl: './task-modal.component.html',
   styleUrls: ['./task-modal.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule,ReactiveFormsModule ]
+  imports: [
+    CommonModule, ReactiveFormsModule,
+    IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon,
+    IonContent, IonLabel, IonItem, IonInput, IonSelect, IonSelectOption,
+    IonToggle, IonFooter
+  ]
 })
 export class TaskModalComponent implements OnInit {
 

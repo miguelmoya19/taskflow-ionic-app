@@ -19,4 +19,7 @@ declare module 'ionicons/icons' {
   export const folderOutline: any;
   export const checkmark: any;
   export const pricetag: any;
+  export const calendarOutline: any;
+  export const documentOutline: any;
 }
+

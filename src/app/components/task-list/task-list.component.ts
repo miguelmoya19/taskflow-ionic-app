@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ModalController } from '@ionic/angular';
+import {
+  IonCard, IonBadge, IonButton, IonIcon,
+  ModalController
+} from '@ionic/angular/standalone';
 import { TaskModel } from 'src/app/models/task/taskModel';
 import { categoryModel } from 'src/app/models/category/categoryModel';
 import { TaskService } from 'src/app/services/task/task-service';
@@ -12,7 +15,7 @@ import { TaskModalComponent } from 'src/app/modals/task-modal/task-modal.compone
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule]
+  imports: [CommonModule, IonCard, IonBadge, IonButton, IonIcon]
 })
 export class TaskListComponent implements OnInit {
 

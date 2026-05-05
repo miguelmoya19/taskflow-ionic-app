@@ -1,1 +1,6 @@
-{}
+{
+  "appId": "io.ionic.starter",
+  "appName": "taskflow-ionic-app",
+  "webDir": "www"
+}
+

@@ -1,6 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent,
+  IonIcon, IonCard, IonCardContent,
+  IonFab, IonFabButton, IonModal
+} from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
 import { TaskListComponent } from '../../components/task-list/task-list.component';
 import { CategoryListComponent } from '../../components/category-list/category-list.component';
@@ -13,7 +17,13 @@ import { DashTotal } from 'src/app/models/dashboard/dashTotal';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, TaskListComponent, CategoryListComponent, TaskModalComponent]
+  imports: [
+    CommonModule,
+    IonHeader, IonToolbar, IonTitle, IonContent,
+    IonIcon, IonCard, IonCardContent,
+    IonFab, IonFabButton, IonModal,
+    TaskListComponent, CategoryListComponent, TaskModalComponent
+  ]
 })
 export class DashboardPage implements OnInit, OnDestroy {
 

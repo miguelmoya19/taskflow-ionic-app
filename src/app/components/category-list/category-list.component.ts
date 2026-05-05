@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonIcon, ModalController } from '@ionic/angular/standalone';
 import { CategoryModalComponent } from '../../modals/category-modal/category-modal.component';
 import { categoryModel } from 'src/app/models/category/categoryModel';
 import { CategoryService } from 'src/app/services/category/category-service';
@@ -13,7 +13,7 @@ import { apps, pricetag, add } from 'ionicons/icons';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule]
+  imports: [CommonModule, IonIcon]
 })
 export class CategoryListComponent implements OnInit {
 
